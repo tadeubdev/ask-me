@@ -50,3 +50,5 @@ const makeWppConnectSession = async (sessionName) => {
     folderNameToken: './session', //folder name when saving tokens
   });
 };
+
+module.exports = makeWppConnectSession;
