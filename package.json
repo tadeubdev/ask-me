@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.16.1"
+    "@wppconnect-team/wppconnect": "^1.16.1",
+    "dotenv": "^16.0.1"
   }
 }
