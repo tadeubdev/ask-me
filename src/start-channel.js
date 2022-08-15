@@ -43,7 +43,7 @@ const makeWppConnectSession = async (sessionName) => {
     browserWS: '', // If u want to use browserWSEndpoint
     browserArgs: chromiumArgs, // Parameters to be added into the chrome browser instance
     puppeteerOptions: puppeteerOptions, // Will be passed to puppeteer.launch
-    disableWelcome: tre, // Option to disable the welcoming message which appears in the beginning
+    disableWelcome: true, // Option to disable the welcoming message which appears in the beginning
     updatesLog: true, // Logs info updates automatically in terminal
     autoClose: 60000, // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
     tokenStore: 'file', // Define how work with tokens, that can be a custom interface
