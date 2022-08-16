@@ -16,19 +16,21 @@ const options = {
 };
 
 const askQuestion = async (question) => {
-  const puppeteer = require('puppeteer-extra')
+  return new Promise(async (resolve) => {
+    const puppeteer = require('puppeteer-extra');
 
-  // add stealth plugin and use defaults (all evasion techniques)
-  const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-  puppeteer.use(StealthPlugin())
+    // add stealth plugin and use defaults (all evasion techniques)
+    const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+    puppeteer.use(StealthPlugin())
 
-  const query = encodeURIComponent(question);
+    const query = encodeURIComponent(question);
 
-  puppeteer.launch(options).then(async browser => {
-    const page = await browser.newPage()
-    await page.goto('https://brainly.com.br/app/ask?entry=hero&q=' + query);
-    await page.waitForTimeout(5000)
-    await browser.close();
+    puppeteer.launch(options).then(async browser => {
+      const page = (await browser.pages()).length? (await browser.pages())[0]: await browser.newPage();
+      await page.goto('https://brainly.com.br/app/ask?entry=hero&q=' + query);
+      await page.waitForTimeout(5000)
+      await browser.close();
+    });
   });
 }
 
