@@ -4,3 +4,5 @@ session/*
 !session/.gitkeep
 
 .env
+
+/tmp
