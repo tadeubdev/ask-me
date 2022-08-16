@@ -14,7 +14,7 @@ const handleGetOldMessages = async (client, callable) => {
   }
   for (let chat of chats) {
     await manipulateMessage(chat.msgs || [], callable);
-    await client.sendSeen(chat.id);
+    await client.sendSeen(chat.from);
   }
 }
 
