@@ -1,4 +1,19 @@
-const puppeteer = require('puppeteer');
+const args = [
+  '--no-sandbox',
+  '--disable-setuid-sandbox',
+  '--disable-infobars',
+  '--window-position=0,0',
+  '--ignore-certifcate-errors',
+  '--ignore-certifcate-errors-spki-list',
+  '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
+];
+
+const options = {
+  args,
+  headless: false,
+  ignoreHTTPSErrors: true,
+  userDataDir: './tmp'
+};
 
 const askQuestion = async (question) => {
   const puppeteer = require('puppeteer-extra')
@@ -9,33 +24,12 @@ const askQuestion = async (question) => {
 
   const query = encodeURIComponent(question);
 
-  // puppeteer usage as normal
-  puppeteer.launch({ headless: true }).then(async browser => {
+  puppeteer.launch(options).then(async browser => {
     const page = await browser.newPage()
     await page.goto('https://brainly.com.br/app/ask?entry=hero&q=' + query);
     await page.waitForTimeout(5000)
-    await page.screenshot({ path: 'testresult.png', fullPage: true })
-    await browser.close()
-    console.log(`All done, check the screenshot. ✨`)
-  })
-
-  // await page.waitFor(1000);
-  // const result = await page.evaluate(async () => {
-  //   const links = await page.$x("//a[contains(., 'Ver respostas')]");
-  //   console.log('links', links)
-  //   if (links.length > 0) {
-  //     const link = links[0];
-  //     return link.href;
-  //   }
-  //   return null;
-  // }).catch(() => {
-  //   return null;
-  // }).finally(() => {
-  //   browser.close();
-  // });
-  // console.log('Result', result);
-  // await page.waitFor(100000);
-  // await browser.close();
+    await browser.close();
+  });
 }
 
 module.exports = askQuestion;
