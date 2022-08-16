@@ -4,7 +4,7 @@ Only for studies purpose.
 
 #### Idea
 
-Someone send in a group: "#ask which color is the sky" \
+Someone sends in a group: "#ask which color is the sky" \
 Then bot answers: "The sky is blue"
 
 ```js
