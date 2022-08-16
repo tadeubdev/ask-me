@@ -1,5 +1,4 @@
 const askQuestion = require("./ask-question");
-const sendMessage = require("./send-message");
 
 const checkMessageIsNotAllowed = (message) => {
   if (!message || message.type !== 'chat') {
@@ -22,9 +21,8 @@ const handleOnMessage = async (message, callable) => {
     }
     const question = body.replace('#ask', '').trim();
     const answer = await askQuestion(question);
-    // const messageToSend = `#answer\n\n${answer}`;
-    // console.log('Sending message', messageToSend);
-    // callable(message.from, messageToSend);
+    const messageToSend = `#answer\n\n${answer}`;
+    callable(message.from, messageToSend);
     resolve();
   });
 }
