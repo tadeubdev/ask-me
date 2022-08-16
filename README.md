@@ -2,6 +2,11 @@
 
 Only for studies purpose.
 
+#### Idea
+
+Someone send in a group: "#ask which color is the sky" \
+Then bot answers: "The sky is blue"
+
 ```js
 cd path/to/dir
 npm install
