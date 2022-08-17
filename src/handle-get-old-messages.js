@@ -1,8 +1,8 @@
 const manipulateMessage = async (messages, callable) => {
-    if (!messages || messages.length === 0) return;
-    for (let message of messages) {
-      await callable(message);
-    }
+  if (!messages || messages.length === 0) return;
+  for (let message of messages) {
+    await callable(message);
+  }
 }
 
 const handleGetOldMessages = async (client, callable) => {
@@ -13,7 +13,7 @@ const handleGetOldMessages = async (client, callable) => {
       await manipulateMessage(chat.msgs || [], callable);
       await client.sendSeen(chat.from);
     }
-  } catch(e) {
+  } catch (e) {
     console.log('Something went wrong when trying to get old messages: ', e.message);
   }
 }
