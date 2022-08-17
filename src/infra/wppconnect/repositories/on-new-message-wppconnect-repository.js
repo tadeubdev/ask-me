@@ -1,6 +1,6 @@
 const onNewMessageWppconnectRepository = (client) => {
   return {
-    onMessage: (callable) => {
+    handle: (callable) => {
       client.onMessage(callable);
     }
   };

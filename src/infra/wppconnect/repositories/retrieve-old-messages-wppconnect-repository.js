@@ -19,8 +19,6 @@ const retrieveOldMessagesWppConnectRepository = (client) => {
         await sendSeenToNumber(chat);
       }
     },
-
-
   };
 }
 

@@ -1,6 +1,6 @@
 const retrieveOldMessagesService = async (retrieveOldMessagesRepository) => {
   return {
-    onMessage: (callable) => {
+    handle: (callable) => {
       const chats = await retrieveOldMessagesRepository.getAllChats();
       for (let chat of chats) {
         try {
