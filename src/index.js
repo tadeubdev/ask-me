@@ -1,33 +1,40 @@
-const makeWppConnectSession = require('./start-channel');
-const handleOnMessage = require('./handle-on-message');
-const retrieveOldMessagesService = require('./services/retrieve-old-messages-service');
-const askQuestionBrainlyRepository = require('./repositories/ask-question-brainly-repository');
-const retrieveOldMessagesWppConnectRepository = require('./repositories/retrieve-old-messages-wppconnect-repository');
+const makeRetrieveOldMessagesService = require('./services/retrieve-old-messages-service');
+const makeAskQuestionService = require('./services/ask-question-service');
+const makeOnMountQuestionFromMessageService = require('./services/mount-question-from-message-service');
+const makeOnNewMessageService = require('./services/on-new-message-service');
+const makeReplyMessageService = require('./services/reply-message-service');
+const makeClientWppconnectBuilder = require('./infra/wppconnect/make-client-wppconnect-builder');
+const makeOnMessageService = require('./services/on-message-service');
 
 (async () => {
   require('dotenv').config();
+
   const session = process.env.SESSION || null;
   if (!session) return console.log('No session provided');
 
   console.log('Starting session', session);
 
   try {
-    const client = await makeWppConnectSession(session);
+    const makeClientBuilder = makeClientWppconnectBuilder(session);
+    const clientService = await makeClientService(makeClientBuilder);
 
-    const retrieveOldMessagesRepository = retrieveOldMessagesWppConnectRepository(client);
-    const askQuestionRepository = askQuestionBrainlyRepository;
+    const retrieveOldMessagesService = makeRetrieveOldMessagesService(clientService.retrieveOldMessagesRepository);
+    const onNewMessageService = makeOnNewMessageService(clientService.onNewMessageRepository);
+    const replyMessageService = makeReplyMessageService(clientService.replyMessageRepository);
 
-    await retrieveOldMessagesService(retrieveOldMessagesRepository, async (event) => {
-      await handleOnMessage(askQuestionRepository, event, (to, message) => {
-        sendMessage(client, to, message);
-      });
-    });
+    const askQuestionRepository = askQuestionBrainlyRepository();
+    const askQuestionService = makeAskQuestionService(askQuestionRepository);
 
-    client.onMessage(async (event) => {
-      await handleOnMessage(askQuestionRepository, event, (to, message) => {
-        sendMessage(client, to, message);
-      });
-    });
+    const onMesageInput = {
+      makeOnMessageRepository: clientService.makeOnMessageRepository,
+      mountQuestionFromMessageService: makeOnMountQuestionFromMessageService,
+      askQuestionService: askQuestionService,
+      replyMessageService: replyMessageService,
+    };
+    const onMessageService = makeOnMessageService(onMesageInput);
+
+    await retrieveOldMessagesService.handle(onMessageService);
+    await onNewMessageService.handle(onMessageService);
 
   } catch (e) {
     console.log('Something went wrong when creating the session', e);

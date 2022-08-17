@@ -1,11 +1,11 @@
 const wppconnect = require('@wppconnect-team/wppconnect');
+const {onMessageWppConnectRepository, onNewMessageWppconnectRepository, retrieveOldMessagesWppConnectRepository, replyMessageWppconnectRepository} = require('./repositories');
 
 const puppeteerOptions = {
   args: [
     '--no-sandbox',
     '--disable-setuid-sandbox',
   ],
-  // executablePath: "/snap/bin/chromium",
   userDataDir: ''
 }
 
@@ -29,9 +29,9 @@ const chromiumArgs = [
   '--disable-app-list-dismiss-on-blur', '--disable-accelerated-video-decode',
 ];
 
-const makeWppConnectSession = async (sessionName) => {
-  return wppconnect.create({
-    session: sessionName,
+const makeOptionsWithSession = (session) => {
+  return {
+    session: session,
     catchQR: undefined,
     statusFind: undefined,
     onLoadingScreen: undefined,
@@ -48,7 +48,24 @@ const makeWppConnectSession = async (sessionName) => {
     autoClose: 60000, // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
     tokenStore: 'file', // Define how work with tokens, that can be a custom interface
     folderNameToken: './session', //folder name when saving tokens
-  });
+  };
 };
 
-module.exports = makeWppConnectSession;
+const makeClientWppconnectBuilder = (session) => {
+  return {
+    mount: async () => {
+      const options = makeOptionsWithSession(session);
+      await wppconnect.create(options).catch(error => {
+        console.error('Something went wrong when trying to connecto to wppconnect:', error.message);
+      });
+      return {
+        makeOnMessageRepository: onMessageWppConnectRepository(),
+        onNewMessageRepository: onNewMessageWppconnectRepository(client),
+        retrieveOldMessagesRepository: retrieveOldMessagesWppConnectRepository(client),
+        replyMessageRepository: replyMessageWppconnectRepository(client),
+      };
+    }
+  };
+};
+
+module.exports = makeClientWppconnectBuilder;
