@@ -7,7 +7,7 @@ const sendMessage = async (client, to, message) => {
     }).then(() => {
       resolve();
     });
-  }
+  })
 }
 
 module.exports = sendMessage;
