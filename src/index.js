@@ -1,6 +1,6 @@
 const makeWppConnectSession = require('./start-channel');
 const handleOnMessage = require('./handle-on-message');
-const handleGetOldMessages = require('./handle-get-old-messages');
+const retrieveOldMessagesService = require('./services/retrieve-old-messages-service');
 const askQuestionBrainlyRepository = require('./repositories/ask-question-brainly-repository');
 
 (async () => {
@@ -11,10 +11,11 @@ const askQuestionBrainlyRepository = require('./repositories/ask-question-brainl
   console.log('Starting session', session);
 
   try {
-    const askQuestionRepository = askQuestionBrainlyRepository;
     const client = await makeWppConnectSession(session);
 
-    await handleGetOldMessages(client, async (event) => {
+    const askQuestionRepository = askQuestionBrainlyRepository;
+
+    await retrieveOldMessagesService(client, async (event) => {
       await handleOnMessage(askQuestionRepository, event, (to, message) => {
         sendMessage(client, to, message);
       });

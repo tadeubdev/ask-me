@@ -17,7 +17,7 @@ const getAllChats = async (client) => {
   return await client.getAllChatsWithMessages(true);
 }
 
-const handleGetOldMessages = async (client, callable) => {
+const retrieveOldMessagesService = async (client, callable) => {
   return new Promise(async (resolve) => {
     try {
       const chats = await getAllChats(client);
@@ -37,4 +37,4 @@ const handleGetOldMessages = async (client, callable) => {
   });
 }
 
-module.exports = handleGetOldMessages;
+module.exports = retrieveOldMessagesService;
