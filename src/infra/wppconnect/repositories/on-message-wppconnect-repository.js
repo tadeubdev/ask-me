@@ -1,4 +1,4 @@
-const checkNumberIsNotAllowed = require("../../../filters/check-number-is-not-allowed");
+const checkNumberIsNotAllowedHelper = require("../../../helpers/check-number-is-not-allowed-helper");
 
 const onMessageWppConnectRepository = () => {
   return (message) => {
@@ -7,7 +7,7 @@ const onMessageWppConnectRepository = () => {
         if (!message || message.type !== 'chat') {
           return true;
         }
-        return checkNumberIsNotAllowed(message.from);
+        return checkNumberIsNotAllowedHelper(message.from);
       },
 
       getContent: () => {
