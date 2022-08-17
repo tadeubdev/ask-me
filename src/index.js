@@ -14,17 +14,18 @@ const askQuestionBrainlyRepository = require('./repositories/ask-question-brainl
     const askQuestionRepository = askQuestionBrainlyRepository;
     const client = await makeWppConnectSession(session);
 
+    await handleGetOldMessages(client, async (event) => {
+      await handleOnMessage(askQuestionRepository, event, (to, message) => {
+        sendMessage(client, to, message);
+      });
+    });
+
     client.onMessage(async (event) => {
       await handleOnMessage(askQuestionRepository, event, (to, message) => {
         sendMessage(client, to, message);
       });
     });
 
-    handleGetOldMessages(client, async (event) => {
-      await handleOnMessage(askQuestionRepository, event, (to, message) => {
-        sendMessage(client, to, message);
-      });
-    });
   } catch (e) {
     console.log('Something went wrong when creating the session', e);
   }
