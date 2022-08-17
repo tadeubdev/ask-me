@@ -7,7 +7,7 @@ const checkMessageIsNotAllowed = (message) => {
   return message.from.indexOf(groupNumber) !== 0;
 }
 
-const handleOnMessage = async (message, callable) => {
+const handleOnMessage = async (askQuestionRepository, message, callable) => {
   return new Promise(async (resolve) => {
     if (checkMessageIsNotAllowed(message)) {
       console.info('Message is not allowed from: ' + (message.from || 'unknown'));
@@ -18,7 +18,7 @@ const handleOnMessage = async (message, callable) => {
     if (!body || body.indexOf('#ask') !== 0) return resolve();
 
     const question = body.replace('#ask', '').trim();
-    const answer = await askQuestionService(question);
+    const answer = await askQuestionService(question, askQuestionRepository);
     const messageToSend = `#answer\n\n${answer}`;
     callable(message.from, messageToSend);
     resolve();
