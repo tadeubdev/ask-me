@@ -5,18 +5,27 @@ const manipulateMessage = async (messages, callable) => {
   }
 }
 
+const sendSeenToNumber = async (client, number) => {
+  if (!number) return;
+  await client.sendSeen(number);
+}
+
 const handleGetOldMessages = async (client, callable) => {
-  try {
-    const chats = await client.getAllChatsWithMessages(true);
-    if (!chats || chats.length === 0) return;
-    for (let chat of chats) {
-      await manipulateMessage(chat.msgs || [], callable);
-      await client.sendSeen(chat.from);
+  return new Promise(async (resolve) => {
+    try {
+      const chats = await client.getAllChatsWithMessages(true);
+      if (!chats || chats.length === 0) return resolve();
+
+      for (let chat of chats) {
+        await manipulateMessage(chat.msgs || [], callable);
+        await sendSeenToNumber(client, chat.from);
+      }
+    } catch (e) {
+      console.error('Something went wrong when trying to get old messages: ', e.message);
+    } finally {
+      resolve();
     }
-  } catch (e) {
-    console.log('Something went wrong when trying to get old messages: ', e.message);
-  }
+  });
 }
 
 module.exports = handleGetOldMessages;
-
