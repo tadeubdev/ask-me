@@ -2,6 +2,7 @@ const makeWppConnectSession = require('./start-channel');
 const handleOnMessage = require('./handle-on-message');
 const retrieveOldMessagesService = require('./services/retrieve-old-messages-service');
 const askQuestionBrainlyRepository = require('./repositories/ask-question-brainly-repository');
+const retrieveOldMessagesWppConnectRepository = require('./repositories/retrieve-old-messages-wppconnect-repository');
 
 (async () => {
   require('dotenv').config();
@@ -13,9 +14,10 @@ const askQuestionBrainlyRepository = require('./repositories/ask-question-brainl
   try {
     const client = await makeWppConnectSession(session);
 
+    const retrieveOldMessagesRepository = retrieveOldMessagesWppConnectRepository(client);
     const askQuestionRepository = askQuestionBrainlyRepository;
 
-    await retrieveOldMessagesService(client, async (event) => {
+    await retrieveOldMessagesService(retrieveOldMessagesRepository, async (event) => {
       await handleOnMessage(askQuestionRepository, event, (to, message) => {
         sendMessage(client, to, message);
       });
