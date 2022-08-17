@@ -1,4 +1,4 @@
-const askQuestion = require("./services/ask-question");
+const askQuestionService = require("./services/ask-question-service");
 
 const checkMessageIsNotAllowed = (message) => {
   if (!message || message.type !== 'chat') return true;
@@ -18,7 +18,7 @@ const handleOnMessage = async (message, callable) => {
     if (!body || body.indexOf('#ask') !== 0) return resolve();
 
     const question = body.replace('#ask', '').trim();
-    const answer = await askQuestion(question);
+    const answer = await askQuestionService(question);
     const messageToSend = `#answer\n\n${answer}`;
     callable(message.from, messageToSend);
     resolve();

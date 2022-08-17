@@ -15,7 +15,7 @@ const options = {
   userDataDir: './tmp'
 };
 
-const askQuestion = async (question) => {
+const askQuestionService = async (question) => {
   return new Promise(async (resolve) => {
     const puppeteer = require('puppeteer-extra');
 
@@ -34,4 +34,4 @@ const askQuestion = async (question) => {
   });
 }
 
-module.exports = askQuestion;
+module.exports = askQuestionService;
